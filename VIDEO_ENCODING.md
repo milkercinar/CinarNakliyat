@@ -10,4 +10,4 @@ ffmpeg -i public/truck-heavy.mp4 -vf "fps=24,scale=1920:-2" -c:v libx264 -preset
 
 Every frame is independently decodable (`-g 1`, no B-frames), trading a larger file for accurate random access during scroll. Lenis and ScrollTrigger use GSAP's single ticker. The video is never autoplayed or looped.
 
-The checked-in delivery file uses the same all-keyframe settings at 960px / CRF 30 to fit the hosting source-size limit (about 5 MB). To reproduce that compact version, replace `scale=1920:-2` with `scale=960:-2` and `-crf 20` with `-crf 30` in the command above.
+The checked-in delivery file uses the source's native 1280px width and the same all-keyframe settings at CRF 30 to fit the hosting source-size limit (about 9 MB). To reproduce it, replace `scale=1920:-2` with `scale=1280:-2` and `-crf 20` with `-crf 30` in the command above. The source itself is 1280×720; upscaling to 1920 does not create extra image detail.

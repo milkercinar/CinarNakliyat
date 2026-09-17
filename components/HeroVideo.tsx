@@ -113,7 +113,7 @@ export default function HeroVideo() {
         </div>
 
         <div className="hero-telemetry mono" aria-hidden="true">
-          <span>TR / 41.0082° N — 28.9784° E</span><span>GPS SIGNAL <b className="online-dot" /> ACTIVE</span>
+          <span>TR / KARABÜK MERKEZ</span><span>GPS SIGNAL <b className="online-dot" /> ACTIVE</span>
         </div>
         <div className="hero-scroll mono" aria-hidden="true">SCROLL TO EXPLORE <span>↓</span></div>
         <div className="hero-progress"><div ref={progressRef} /></div>

@@ -19,3 +19,33 @@
 @media(max-width:760px){.manifesto h2{font-size:clamp(46px,10.5vw,78px)}}
 @media(max-width:390px){.hero-title{font-size:20vw}.hero-bottom-line p{font-size:13px}.hero-call strong{font-size:25px}.manifesto h2{font-size:12vw}.operation h2{font-size:15vw}.contact h2{font-size:15vw}.call-button strong{font-size:32px}}
 @media(prefers-reduced-motion:reduce){.ticker-track,.signal-dot{animation:none}.hero-video{transform:none!important}.hero-outro{display:none}.hero-content{opacity:1!important;transform:none!important}*{scroll-behavior:auto!important}}
+
+/* Refined palette, clearer footage and a quieter editorial rhythm. */
+:root{--ink:#101416;--panel:#191e20;--line:#373d3f;--signal:#b99567}
+body{background:var(--ink);color:#f1f0eb}
+.topbar{background:#10141635}.hero-shell{background:#1b2225}
+.hero-video{filter:saturate(.88) contrast(1.03) brightness(1.08)}
+.hero-vignette{background:linear-gradient(90deg,#101416c9 0%,#1014168c 29%,#10141612 67%,#10141639 100%),linear-gradient(0deg,#1014169c 0%,transparent 37%,#1014162e 100%)}
+.hero-title{line-height:.84;font-size:clamp(90px,15vw,235px);margin:28px 0 45px;text-shadow:0 5px 36px #10141658}
+.hero-outro p{line-height:.9;font-size:clamp(84px,11.4vw,190px)}
+.hero-content{padding-bottom:32px}
+.data-ticker{background:#dfdcd5;color:#242a2b}
+.manifesto{background:#191e20}.manifesto h2,.services h2,.operation h2,.contact h2{line-height:1.02;letter-spacing:-.015em}
+.manifesto h2{font-size:clamp(52px,6.8vw,120px)}.manifesto h2 span:not(.orange){color:#a2a6a5}
+.metrics{background:#e5e2da;color:#202527}.metric{border-color:#b6b7b3}.metric:last-child{border-color:#b6b7b3}
+.services{background:#101416}.services h2{font-size:clamp(70px,8.7vw,145px)}.service-row:hover{background:#202729}
+.operation{background:#202729}.operation-media{background-image:linear-gradient(0deg,#10141691,transparent 26%),url('/volvo-fh.jpg');background-position:65% center;filter:none}
+.operation-media{background-image:none;overflow:hidden}.operation-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:65% center}.operation-media:before{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#101416a0,transparent 30%);z-index:1}.operation-media:after{z-index:2}
+.operation h2{font-size:clamp(76px,7vw,130px)}
+.media-credit{position:absolute;left:48px;bottom:17px;z-index:2;font:400 10px var(--font-mono);color:#fff;background:#101416a6;padding:4px 6px}.media-credit:hover{text-decoration:underline}
+.contact{background:#e5e2da;color:#202527}.contact .section-heading{border-color:#a9aaa6;color:#505859}.contact .section-heading>span:first-child{color:#202527}.contact .square{background:var(--signal)}
+.contact-content{grid-template-columns:minmax(0,1.1fr) minmax(300px,.8fr);gap:clamp(40px,5vw,100px);align-items:start;padding-top:82px}
+.contact-kicker{color:#745c42}.contact h2{font-size:clamp(70px,8.2vw,140px);margin:22px 0 30px}.contact h2 em{color:#8c765b}
+.contact-intro{max-width:500px;font-size:17px;line-height:1.75;color:#555d5d;margin:0}
+.contact-action{border-top:1px solid #9fa6a3;padding:0}.contact-detail{padding:23px 0 27px;border-bottom:1px solid #b6bdb8}.contact-detail .mono{display:block;font-size:11px;letter-spacing:.12em;color:#69716d;margin-bottom:10px}.contact-detail>a{font:700 clamp(38px,4vw,64px)/1 var(--font-display);letter-spacing:.01em;display:flex;justify-content:space-between;align-items:center}.contact-detail>a span{font-size:26px;color:#8c765b}.contact-detail address{font-style:normal;font-size:17px;line-height:1.6;font-weight:600}.contact .call-button{margin-top:30px;background:#202729;color:#f1f0eb;padding:19px 25px;font:600 12px var(--font-mono);letter-spacing:.12em}.contact .call-button:hover{background:#3c474a}
+.footer{background:#101416}.footer-top{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,.6fr);align-items:start;gap:70px;padding:88px 0 80px}.footer-overline{display:block;color:#a0a9a8;font-size:11px;letter-spacing:.15em;margin-bottom:33px}.footer-brand{font-size:clamp(90px,11vw,175px);line-height:.78}.footer-brand span{color:var(--signal);margin-top:11px}.footer-description{font-size:16px;color:#aab3b0;margin:28px 0 0}.footer-contact{display:grid;gap:32px}.footer-contact .mono{display:block;font-size:11px;color:#8d9796;letter-spacing:.13em;margin-bottom:12px}.footer-contact a:not(.back-top){font:700 38px/1 var(--font-display)}.footer-contact address{font-style:normal;font-size:15px;line-height:1.7;color:#e3e7e3}.footer-contact .back-top{justify-self:start;margin:4px 0 0}.footer-bottom{border-top:0;color:#9da6a4}
+.hero-title{line-height:.98}.hero-outro p{line-height:1}.manifesto h2,.services h2,.operation h2,.contact h2{line-height:1.08}.service-row h3{line-height:1.07}.footer-brand{line-height:.97}.footer-brand span{margin-top:4px}.operation-photo{object-position:95% center}
+@media(max-width:1100px){.hero-title{font-size:clamp(85px,15vw,170px)}.contact-content{grid-template-columns:minmax(0,1fr) minmax(270px,.9fr);gap:35px}.contact h2{font-size:clamp(68px,8vw,100px)}}
+@media(max-width:760px){.hero-vignette{background:linear-gradient(90deg,#101416a6 0%,#10141654 67%,#10141621 100%),linear-gradient(0deg,#101416bc 0%,transparent 56%,#10141626 100%)}.hero-title{font-size:clamp(74px,19vw,135px);line-height:.89;margin:18px 0 32px}.hero-content{padding-bottom:105px}.hero-outro p{font-size:clamp(67px,14vw,120px);line-height:.94}.manifesto h2{font-size:clamp(45px,10.5vw,78px)}.services h2{font-size:clamp(64px,13vw,105px)}.operation h2{font-size:clamp(70px,13vw,115px)}.operation-media{background-position:66% center}.media-credit{left:28px;bottom:13px;right:28px;font-size:9px}.media-label{left:28px;right:28px;bottom:52px}.contact-content{display:block;padding-top:58px}.contact h2{font-size:clamp(73px,14vw,112px);margin-bottom:23px}.contact-intro{font-size:15px}.contact-action{margin-top:40px}.contact-detail>a{font-size:clamp(39px,9vw,58px)}.contact-detail address{font-size:16px}.footer-top{display:block;padding:70px 0 55px}.footer-brand{font-size:clamp(86px,19vw,140px)}.footer-contact{margin-top:58px;gap:28px}.footer-contact .back-top{margin-top:4px}.footer-bottom span:nth-child(2){display:block}}
+@media(max-width:390px){.hero-title{font-size:19vw}.manifesto h2{font-size:11.6vw}.contact h2{font-size:13vw}.operation h2{font-size:13vw}}
+@media(max-width:760px) and (max-height:640px){.hero-content{padding-top:75px;padding-bottom:25px}.hero-title{font-size:clamp(66px,17vw,110px);margin:14px 0 20px}.hero-bottom-line{gap:15px}.hero-bottom-line p{font-size:13px}.hero-telemetry{display:none}.hero-scroll{top:85px}}
