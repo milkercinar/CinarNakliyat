@@ -16,6 +16,8 @@ export default function HeroVideo() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
+    // Mobile browser chrome can resize the viewport mid-swipe; keep the pin stable.
+    ScrollTrigger.config({ ignoreMobileResize: true });
     const hero = heroRef.current;
     const video = videoRef.current;
     if (!hero || !video) return;
@@ -54,33 +56,51 @@ export default function HeroVideo() {
     if (video.readyState >= 2) onReady();
     gsap.ticker.add(updateFrame);
 
-    const trigger = ScrollTrigger.create({
-      trigger: hero,
-      start: "top top",
-      end: "+=230%",
-      pin: hero,
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-      onUpdate(self) {
-        const endTime = source === CDN_SOURCE ? duration : Math.min(LOCAL_END, duration);
-        targetTime = startTime + self.progress * Math.max(0, endTime - startTime);
-        if (progressRef.current) progressRef.current.style.transform = `scaleX(${self.progress})`;
-      },
-    });
+    const media = gsap.matchMedia();
+    const createNarrative = (mobile: boolean) => {
+      const narrative = gsap.timeline({
+        scrollTrigger: {
+          trigger: hero,
+          start: "top top",
+          end: () => `+=${Math.round(hero.offsetHeight * (mobile ? 3.4 : 2.3))}`,
+          pin: hero,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          scrub: 0.6,
+          onUpdate(self) {
+            const endTime = source === CDN_SOURCE ? duration : Math.min(LOCAL_END, duration);
+            targetTime = startTime + self.progress * Math.max(0, endTime - startTime);
+            if (progressRef.current) progressRef.current.style.transform = `scaleX(${self.progress})`;
+          },
+        },
+      });
 
-    const narrative = gsap.timeline({
-      scrollTrigger: { trigger: hero, start: "top top", end: "+=230%", scrub: 0.6 },
-    });
-    narrative
-      .to(".hero-title", { yPercent: -18, opacity: 0, duration: 0.34 }, 0.34)
-      .to(".hero-intro", { y: -30, opacity: 0, duration: 0.22 }, 0.38)
-      .fromTo(".hero-outro", { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.24 }, 0.66)
-      .to(".hero-video", { objectPosition: "0% center", duration: 1, ease: "none" }, 0);
+      if (mobile) {
+        // Keep the opening message visible through more than one phone swipe.
+        narrative
+          .to(".hero-title", { yPercent: -12, opacity: 0, duration: 0.17 }, 0.43)
+          .to(".hero-intro", { y: -20, opacity: 0, duration: 0.16 }, 0.45)
+          .fromTo(".hero-outro", { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.22 }, 0.62)
+          .to(".hero-scroll", { opacity: 0.35, duration: 1, ease: "none" }, 0);
+      } else {
+        narrative
+          .to(".hero-title", { yPercent: -18, opacity: 0, duration: 0.34 }, 0.34)
+          .to(".hero-intro", { y: -30, opacity: 0, duration: 0.22 }, 0.38)
+          .fromTo(".hero-outro", { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.24 }, 0.66)
+          .to(".hero-video", { objectPosition: "0% center", duration: 1, ease: "none" }, 0);
+      }
+
+      return () => {
+        narrative.scrollTrigger?.kill();
+        narrative.kill();
+      };
+    };
+
+    media.add("(max-width: 760px)", () => createNarrative(true));
+    media.add("(min-width: 761px)", () => createNarrative(false));
 
     return () => {
-      trigger.kill();
-      narrative.scrollTrigger?.kill();
-      narrative.kill();
+      media.revert();
       gsap.ticker.remove(updateFrame);
       video.removeEventListener("loadedmetadata", onMetadata);
       video.removeEventListener("loadeddata", onReady);
