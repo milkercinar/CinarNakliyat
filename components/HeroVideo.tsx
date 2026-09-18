@@ -5,10 +5,11 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const CDN_SOURCE = "https://assets.mixkit.co/videos/28787/28787-720.mp4";
+const LOCAL_START = 4;
+const LOCAL_END = 10;
 
 export default function HeroVideo() {
   const heroRef = useRef<HTMLElement>(null);
-  const frameRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const [source, setSource] = useState("/truck-scrub.mp4");
@@ -16,9 +17,8 @@ export default function HeroVideo() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     const hero = heroRef.current;
-    const frame = frameRef.current;
     const video = videoRef.current;
-    if (!hero || !frame || !video) return;
+    if (!hero || !video) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
@@ -26,24 +26,32 @@ export default function HeroVideo() {
     let targetTime = 0;
     let lastTime = -1;
     let duration = 0;
+    let isReady = false;
+    const startTime = source === CDN_SOURCE ? 0 : LOCAL_START;
 
     const onMetadata = () => {
       duration = Number.isFinite(video.duration) ? video.duration : 0;
       video.pause();
-      try { video.currentTime = 0.01; } catch { /* first frame pending */ }
+      // Decode the first frame before scroll-driven seeking begins.
+      targetTime = Math.min(startTime, duration);
+      try { video.currentTime = targetTime; } catch { /* first frame pending */ }
       ScrollTrigger.refresh();
     };
+    const onReady = () => { isReady = true; updateFrame(); };
     const updateFrame = () => {
-      if (!duration || video.seeking || video.readyState < 2) return;
-      const next = Math.min(Math.max(targetTime, 0.01), Math.max(0.01, duration - 0.01));
-      // A 24fps all-keyframe file needs at most one seek per decoded frame.
-      if (Math.abs(next - lastTime) < 1 / 24 && Math.abs(next - duration) > 1 / 24) return;
+      if (!duration || !isReady || video.seeking) return;
+      const frame = 1 / 24;
+      const next = Math.min(Math.max(Math.round(targetTime / frame) * frame, 0.01), Math.max(0.01, duration - frame));
+      if (Math.abs(next - lastTime) < frame * 0.5) return;
       lastTime = next;
       video.currentTime = next;
     };
 
     video.addEventListener("loadedmetadata", onMetadata);
+    video.addEventListener("loadeddata", onReady);
+    video.addEventListener("seeked", updateFrame);
     if (video.readyState >= 1) onMetadata();
+    if (video.readyState >= 2) onReady();
     gsap.ticker.add(updateFrame);
 
     const trigger = ScrollTrigger.create({
@@ -54,7 +62,8 @@ export default function HeroVideo() {
       anticipatePin: 1,
       invalidateOnRefresh: true,
       onUpdate(self) {
-        targetTime = self.progress * duration;
+        const endTime = source === CDN_SOURCE ? duration : Math.min(LOCAL_END, duration);
+        targetTime = startTime + self.progress * Math.max(0, endTime - startTime);
         if (progressRef.current) progressRef.current.style.transform = `scaleX(${self.progress})`;
       },
     });
@@ -74,12 +83,14 @@ export default function HeroVideo() {
       narrative.kill();
       gsap.ticker.remove(updateFrame);
       video.removeEventListener("loadedmetadata", onMetadata);
+      video.removeEventListener("loadeddata", onReady);
+      video.removeEventListener("seeked", updateFrame);
     };
   }, [source]);
 
   return (
     <section ref={heroRef} className="hero-shell" id="baslangic" aria-label="Çınar Nakliyat tanıtım">
-      <div ref={frameRef} className="hero-frame">
+      <div className="hero-frame">
         <video
           ref={videoRef}
           className="hero-video"
@@ -98,9 +109,9 @@ export default function HeroVideo() {
 
         <div className="hero-content hero-intro site-container">
           <div className="eyebrow"><span className="signal-dot" /> 1980'DEN BERİ / AĞIR YÜK OPERASYONLARI</div>
-          <h1 className="hero-title">YÜKÜN<br /><em>AĞIRI</em><span className="title-period">.</span></h1>
+          <h1 className="hero-title">ÇINAR<br /><em>NAKLİYAT</em><span className="title-period">.</span></h1>
           <div className="hero-bottom-line">
-            <p>Demirden mermere. Şehirden şehre.<br />Her sevkiyatta aynı kararlılık.</p>
+            <p>1980&apos;den beri ağır yük taşımacılığı.<br />Karabük&apos;ten Türkiye&apos;nin 81 iline.</p>
             <a href="tel:+905469690233" className="hero-call"><span>SEVKİYAT & FİYAT HATTI</span><strong>0546 969 0233 <span aria-hidden="true">↗</span></strong></a>
           </div>
         </div>
