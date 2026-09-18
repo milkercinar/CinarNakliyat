@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const CDN_SOURCE = "https://assets.mixkit.co/videos/28787/28787-720.mp4";
-const LOCAL_START = 4;
-const LOCAL_END = 10;
+const CDN_SOURCE = "https://assets.mixkit.co/videos/2741/2741-1080.mp4";
+const LOCAL_START = 0.8;
+const LOCAL_END = 5.5;
 
 export default function HeroVideo() {
   const heroRef = useRef<HTMLElement>(null);
@@ -75,7 +75,7 @@ export default function HeroVideo() {
       .to(".hero-title", { yPercent: -18, opacity: 0, duration: 0.34 }, 0.34)
       .to(".hero-intro", { y: -30, opacity: 0, duration: 0.22 }, 0.38)
       .fromTo(".hero-outro", { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.24 }, 0.66)
-      .to(".hero-video", { scale: 1.08, duration: 1, ease: "none" }, 0);
+      .to(".hero-video", { objectPosition: "0% center", duration: 1, ease: "none" }, 0);
 
     return () => {
       trigger.kill();
@@ -124,7 +124,7 @@ export default function HeroVideo() {
         </div>
 
         <div className="hero-telemetry mono" aria-hidden="true">
-          <span>TR / KARABÜK MERKEZ</span><span>GPS SIGNAL <b className="online-dot" /> ACTIVE</span>
+          <span>TR / KARABÜK MERKEZ · TEMSİLİ GÖRÜNTÜ</span><span>GPS SIGNAL <b className="online-dot" /> ACTIVE</span>
         </div>
         <div className="hero-scroll mono" aria-hidden="true">SCROLL TO EXPLORE <span>↓</span></div>
         <div className="hero-progress"><div ref={progressRef} /></div>
