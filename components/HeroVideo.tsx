@@ -112,7 +112,7 @@ export default function HeroVideo() {
           <h1 className="hero-title">ÇINAR<br /><em>NAKLİYAT</em><span className="title-period">.</span></h1>
           <div className="hero-bottom-line">
             <p>1980&apos;den beri ağır yük taşımacılığı.<br />Karabük&apos;ten Türkiye&apos;nin 81 iline.</p>
-            <a href="tel:+905469690233" className="hero-call"><span>SEVKİYAT & FİYAT HATTI</span><strong>0546 969 0233 <span aria-hidden="true">↗</span></strong></a>
+            <a href="tel:+905323526514" className="hero-call"><span>SEVKİYAT & FİYAT HATTI</span><strong>+90 532 352 6514 <span aria-hidden="true">↗</span></strong></a>
           </div>
         </div>
 
