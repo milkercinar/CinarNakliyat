@@ -109,7 +109,7 @@ export default function HeroVideo() {
 
         <div className="hero-content hero-intro site-container">
           <div className="eyebrow"><span className="signal-dot" /> 1980'DEN BERİ / AĞIR YÜK OPERASYONLARI</div>
-          <h1 className="hero-title">ÇINAR<br /><em>NAKLİYAT</em><span className="title-period">.</span></h1>
+          <h1 className="hero-title"><span>ÇINAR</span><em>NAKLİYAT</em></h1>
           <div className="hero-bottom-line">
             <p>1980&apos;den beri ağır yük taşımacılığı.<br />Karabük&apos;ten Türkiye&apos;nin 81 iline.</p>
             <a href="tel:+905323526514" className="hero-call"><span>SEVKİYAT & FİYAT HATTI</span><strong>+90 532 352 6514 <span aria-hidden="true">↗</span></strong></a>

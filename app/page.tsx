@@ -56,7 +56,7 @@ export default function Home() {
       <section className="services section-pad" id="hizmetler">
         <div className="site-container">
           <div className="section-heading mono"><span><i className="square" /> 002 / UZMANLIK ALANLARI</span><span>DOĞRU YÜK. DOĞRU PLAN.</span></div>
-          <div className="services-lead"><h2>HER TONUN<br /><em>BİR PLANI VAR.</em></h2><p>Yükünüzün niteliği ne olursa olsun, sevkiyatın her adımı sağlam bir planla başlar.</p></div>
+          <div className="services-lead"><h2>AĞIR YÜKÜN<br /><em>GÜVENLİ YOLU.</em></h2><p>Demir-çelikten mermer bloklara kadar her sevkiyatı yükün gereğine göre planlıyoruz.</p></div>
           <div className="service-list">{services.map((s) => <article className="service-row" key={s.id}><span className="service-num mono">/{s.id}</span><div className="service-main"><span className="service-sub mono">{s.sub}</span><h3>{s.title}</h3></div><p>{s.detail}</p><span className="service-arrow" aria-hidden="true">↗</span></article>)}</div>
         </div>
       </section>
