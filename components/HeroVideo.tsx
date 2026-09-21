@@ -5,14 +5,17 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const CDN_SOURCE = "https://assets.mixkit.co/videos/2741/2741-1080.mp4";
+const DESKTOP_SOURCE = "/truck-scrub.mp4";
+const MOBILE_SOURCE = "/truck-scrub-mobile.mp4";
 const LOCAL_START = 0.8;
 const LOCAL_END = 5.5;
 
 export default function HeroVideo() {
   const heroRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
-  const [source, setSource] = useState("/truck-scrub.mp4");
+  const [source, setSource] = useState("");
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -21,7 +24,13 @@ export default function HeroVideo() {
     const hero = heroRef.current;
     const video = videoRef.current;
     if (!hero || !video) return;
+    const mobileCanvas = window.matchMedia("(max-width: 760px)").matches;
+    if (!source) {
+      setSource(mobileCanvas ? MOBILE_SOURCE : DESKTOP_SOURCE);
+      return;
+    }
     video.classList.remove("is-ready");
+    canvasRef.current?.classList.remove("is-ready");
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
@@ -30,7 +39,33 @@ export default function HeroVideo() {
     let lastTime = -1;
     let duration = 0;
     let isReady = false;
-    const startTime = source === CDN_SOURCE ? 0 : LOCAL_START;
+    const mobileSource = source === MOBILE_SOURCE;
+    const startTime = source === CDN_SOURCE || mobileSource ? 0 : LOCAL_START;
+
+    const drawMobileFrame = () => {
+      const canvas = canvasRef.current;
+      if (!canvas || !mobileCanvas || video.readyState < 2 || !video.videoWidth || !video.videoHeight) return;
+      const rect = canvas.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      const width = Math.round(rect.width * pixelRatio);
+      const height = Math.round(rect.height * pixelRatio);
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width;
+        canvas.height = height;
+      }
+
+      const context = canvas.getContext("2d", { alpha: false });
+      if (!context) return;
+      const scale = Math.max(width / video.videoWidth, height / video.videoHeight);
+      const sourceWidth = width / scale;
+      const sourceHeight = height / scale;
+      const sourceX = Math.max(0, (video.videoWidth - sourceWidth) * 0.85);
+      const sourceY = Math.max(0, (video.videoHeight - sourceHeight) * 0.5);
+      context.drawImage(video, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, width, height);
+      canvas.classList.add("is-ready");
+    };
 
     const onMetadata = () => {
       duration = Number.isFinite(video.duration) ? video.duration : 0;
@@ -43,6 +78,7 @@ export default function HeroVideo() {
     const onReady = () => {
       isReady = true;
       video.classList.add("is-ready");
+      drawMobileFrame();
       updateFrame();
     };
     const updateFrame = () => {
@@ -53,11 +89,16 @@ export default function HeroVideo() {
       lastTime = next;
       video.currentTime = next;
     };
+    const onSeeked = () => {
+      drawMobileFrame();
+      updateFrame();
+    };
 
     video.addEventListener("loadedmetadata", onMetadata);
     video.addEventListener("loadeddata", onReady);
     video.addEventListener("canplay", onReady);
-    video.addEventListener("seeked", updateFrame);
+    video.addEventListener("seeked", onSeeked);
+    window.addEventListener("orientationchange", drawMobileFrame);
     if (video.readyState >= 1) onMetadata();
     if (video.readyState >= 2) onReady();
     gsap.ticker.add(updateFrame);
@@ -74,7 +115,7 @@ export default function HeroVideo() {
           invalidateOnRefresh: true,
           scrub: 0.6,
           onUpdate(self) {
-            const endTime = source === CDN_SOURCE ? duration : Math.min(LOCAL_END, duration);
+            const endTime = source === CDN_SOURCE || mobileSource ? duration : Math.min(LOCAL_END, duration);
             targetTime = startTime + self.progress * Math.max(0, endTime - startTime);
             // Mobile browsers can pause their animation clock between touch events.
             // Queue the frame from ScrollTrigger as well as from the shared GSAP ticker.
@@ -114,7 +155,8 @@ export default function HeroVideo() {
       video.removeEventListener("loadedmetadata", onMetadata);
       video.removeEventListener("loadeddata", onReady);
       video.removeEventListener("canplay", onReady);
-      video.removeEventListener("seeked", updateFrame);
+      video.removeEventListener("seeked", onSeeked);
+      window.removeEventListener("orientationchange", drawMobileFrame);
     };
   }, [source]);
 
@@ -124,7 +166,7 @@ export default function HeroVideo() {
         <video
           ref={videoRef}
           className="hero-video"
-          src={source}
+          src={source || undefined}
           poster="/truck-poster.jpg"
           muted
           playsInline
@@ -132,9 +174,11 @@ export default function HeroVideo() {
           aria-hidden="true"
           onError={(event) => {
             event.currentTarget.classList.remove("is-ready");
-            if (source !== CDN_SOURCE) setSource(CDN_SOURCE);
+            canvasRef.current?.classList.remove("is-ready");
+            if (source && source !== CDN_SOURCE) setSource(CDN_SOURCE);
           }}
         />
+        <canvas ref={canvasRef} className="hero-canvas" aria-hidden="true" />
         <div className="hero-vignette" />
         <div className="hero-grid" aria-hidden="true" />
         <div className="crosshair hero-crosshair-left" aria-hidden="true" />
