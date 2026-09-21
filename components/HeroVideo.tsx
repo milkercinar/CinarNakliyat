@@ -39,7 +39,10 @@ export default function HeroVideo() {
       try { video.currentTime = targetTime; } catch { /* first frame pending */ }
       ScrollTrigger.refresh();
     };
-    const onReady = () => { isReady = true; updateFrame(); };
+    const onReady = () => {
+      isReady = true;
+      updateFrame();
+    };
     const updateFrame = () => {
       if (!duration || !isReady || video.seeking) return;
       const frame = 1 / 24;
@@ -51,6 +54,7 @@ export default function HeroVideo() {
 
     video.addEventListener("loadedmetadata", onMetadata);
     video.addEventListener("loadeddata", onReady);
+    video.addEventListener("canplay", onReady);
     video.addEventListener("seeked", updateFrame);
     if (video.readyState >= 1) onMetadata();
     if (video.readyState >= 2) onReady();
@@ -70,6 +74,9 @@ export default function HeroVideo() {
           onUpdate(self) {
             const endTime = source === CDN_SOURCE ? duration : Math.min(LOCAL_END, duration);
             targetTime = startTime + self.progress * Math.max(0, endTime - startTime);
+            // Mobile browsers can pause their animation clock between touch events.
+            // Queue the frame from ScrollTrigger as well as from the shared GSAP ticker.
+            updateFrame();
             if (progressRef.current) progressRef.current.style.transform = `scaleX(${self.progress})`;
           },
         },
@@ -104,6 +111,7 @@ export default function HeroVideo() {
       gsap.ticker.remove(updateFrame);
       video.removeEventListener("loadedmetadata", onMetadata);
       video.removeEventListener("loadeddata", onReady);
+      video.removeEventListener("canplay", onReady);
       video.removeEventListener("seeked", updateFrame);
     };
   }, [source]);
