@@ -21,6 +21,7 @@ export default function HeroVideo() {
     const hero = heroRef.current;
     const video = videoRef.current;
     if (!hero || !video) return;
+    video.classList.remove("is-ready");
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
@@ -41,6 +42,7 @@ export default function HeroVideo() {
     };
     const onReady = () => {
       isReady = true;
+      video.classList.add("is-ready");
       updateFrame();
     };
     const updateFrame = () => {
@@ -128,7 +130,10 @@ export default function HeroVideo() {
           playsInline
           preload="auto"
           aria-hidden="true"
-          onError={() => { if (source !== CDN_SOURCE) setSource(CDN_SOURCE); }}
+          onError={(event) => {
+            event.currentTarget.classList.remove("is-ready");
+            if (source !== CDN_SOURCE) setSource(CDN_SOURCE);
+          }}
         />
         <div className="hero-vignette" />
         <div className="hero-grid" aria-hidden="true" />
